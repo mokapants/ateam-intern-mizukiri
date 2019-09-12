@@ -32,15 +32,18 @@ public class RigidController : MonoBehaviour
     [Range(0, 20), SerializeField] int downLimit; //減速上限　　　　　master版制作時は定数で
 
     //各種カウンターなど===========================================
-    private bool isStart; //ゲームのシーン管理用変数
+    private bool isStart; //ゲームが始まってればtrue
+    private bool isGameOver; // ゲームオーバーならtrue
     private bool isHit; //当たっているかの判定用変数
-    private int hitCounter; //当たっている数を判断
+    private bool[] hitFlag; // 判定にヒットしてるかどうかのフラグ
     private int judgement; //前回の判定を記憶する変数
     private bool isPush; //ボタンが押されたかの判定用変数
 
     void Start()
     {
         isStart = false;
+        isGameOver = false;
+        hitFlag = new bool[2] { false, false };
 
         stoneRigid2D = GetComponent<Rigidbody2D>();
 
@@ -53,7 +56,7 @@ public class RigidController : MonoBehaviour
 
         downCounter = 0;
         downDeceleration /= 100;
-        //downDeceleration;    
+        //downDeceleration;
         //downLimit；
     }
 
@@ -69,6 +72,13 @@ public class RigidController : MonoBehaviour
             return;
         }
 
+        if (isGameOver)
+        {
+            // ゲームオーバー用の処理
+
+            return;
+        }
+
         judgement = 0;
 
         if (Input.GetKeyDown(KeyCode.Space)) //ボタンが押されたなら
@@ -76,6 +86,7 @@ public class RigidController : MonoBehaviour
             if (!isHit) //判定と当たっていない時にSpaceが押されたか
             {
                 isPush = true;
+                isGameOver = true;
                 judgement = (int) JUDGEMENT.miss; //miss判定を行う
             }
 
@@ -88,15 +99,38 @@ public class RigidController : MonoBehaviour
 
     private void LateUpdate()
     {
-        hitCounter = 0; //hitCounterを初期化する
-        isHit = false; //isHitを初期化する
+        if (!hitFlag[0] && !hitFlag[1])
+        {
+            isHit = false; //isHitを初期化する
+        }
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    void OnTriggerEnter2D(Collider2D other)
     {
         isHit = true; //当たっている
-        hitCounter++; //hitCounterを進める
-        Debug.Log(hitCounter);
+
+        string tag = other.gameObject.tag;
+        if (tag == "Perfect")
+        {
+            hitFlag[0] = true;
+        }
+        else if (tag == "Good")
+        {
+            hitFlag[1] = true;
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        string tag = other.gameObject.tag;
+        if (tag == "Perfect")
+        {
+            hitFlag[0] = false;
+        }
+        else if (tag == "Good")
+        {
+            hitFlag[1] = false;
+        }
     }
 
     //処理関数//__//__//__//__//__//__//__//__//__//__//__//__//__//__//__//__
@@ -125,40 +159,38 @@ public class RigidController : MonoBehaviour
         //縦方向に速度を加える
         stoneRigid2D.AddForce(transform.up * (upForce /*- counter/3*/ ), ForceMode2D.Impulse);
 
-        switch (hitCounter)
+        if (hitFlag[0])
         {
-            case 0:
-                judgement = (int) JUDGEMENT.error; //エラーログ
-                break;
+            //perfect時の処理を書く
+            if (feverCounter < feverRequired) //
+            {
+                feverCounter++; //カウンターを進める
+            }
+            else
+            {
+                rightForce = rightForce * feverAcceleration;
 
-            case (int) JUDGEMENT.good:
-                //good時の処理を書く
-                judgement = (int) JUDGEMENT.good; //good判定を出す
+                ////upForce = 5.5f;
+                feverCounter = 0;
+                downCounter = 0;
 
-                if (downCounter < downLimit)
-                {
-                    downCounter--;
-                }
-                break;
+            }
 
-            case (int) JUDGEMENT.perfect:
-                //perfect時の処理を書く
-                if (feverCounter < feverRequired) //
-                {
-                    feverCounter++; //カウンターを進める
-                }
-                else
-                {
-                    rightForce = rightForce * feverAcceleration;
+            judgement = (int) JUDGEMENT.perfect; //perfect判定を出す
+        }
+        else if (hitFlag[1])
+        {
+            //good時の処理を書く
+            judgement = (int) JUDGEMENT.good; //good判定を出す
 
-                    ////upForce = 5.5f;
-                    feverCounter = 0;
-                    downCounter = 0;
-
-                }
-
-                judgement = (int) JUDGEMENT.perfect; //perfect判定を出す
-                break;
+            if (downCounter < downLimit)
+            {
+                downCounter--;
+            }
+        }
+        else
+        {
+            judgement = (int) JUDGEMENT.error; //エラーログ
         }
 
         isPush = false; //押されたというフラグをoffにする
@@ -200,7 +232,7 @@ public class RigidController : MonoBehaviour
     /// 使用　 UIによる表示やエフェクト発生フラグ
     /// </summary>
     /// <returns>ジャッジ結果</returns>
-    public int GetJUDGEMENT()
+    public int GetJudgement()
     {
         return judgement;
     }

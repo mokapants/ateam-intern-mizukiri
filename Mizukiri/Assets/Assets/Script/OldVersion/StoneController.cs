@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class StoneController : MonoBehaviour
 {
-
     float speed;
 
     float gravity;
@@ -35,7 +34,7 @@ public class StoneController : MonoBehaviour
 
         Debug.Log(score);
 
-        if ((this.transform.position.y < 0.3) && (this.transform.position.y > -0.1f))
+        if ((transform.position.y < 0.3) && (transform.position.y > -0.1f))
         {
 
             Vector2 direction = this.transform.position - beforePos;
