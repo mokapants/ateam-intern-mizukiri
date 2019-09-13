@@ -80,6 +80,14 @@ public class RigidController : MonoBehaviour
         }
 
         judgement = 0;
+        if (hitFlag[0] || hitFlag[1])
+        {
+            isHit = true;
+        }
+        else
+        {
+            isHit = false;
+        }
 
         if (Input.GetKeyDown(KeyCode.Space)) //ボタンが押されたなら
         {
@@ -89,26 +97,28 @@ public class RigidController : MonoBehaviour
                 isGameOver = true;
                 judgement = (int) JUDGEMENT.miss; //miss判定を行う
             }
-
-            if (isHit && !isPush) //判定と当たっていて事前にボタンが押されてないか
+            else if (!isPush) //判定と当たっていて事前にボタンが押されてないか
             {
                 StoneReflect(); //石の反射処理
             }
         }
     }
 
-    private void LateUpdate()
+    void OnTriggerEnter2D(Collider2D other)
     {
-        if (!hitFlag[0] && !hitFlag[1])
+        string tag = other.gameObject.tag;
+        if (tag == "Perfect")
         {
-            isHit = false; //isHitを初期化する
+            hitFlag[0] = true;
+        }
+        else if (tag == "Good")
+        {
+            hitFlag[1] = true;
         }
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerStay2D(Collider2D other)
     {
-        isHit = true; //当たっている
-
         string tag = other.gameObject.tag;
         if (tag == "Perfect")
         {
@@ -187,10 +197,6 @@ public class RigidController : MonoBehaviour
             {
                 downCounter--;
             }
-        }
-        else
-        {
-            judgement = (int) JUDGEMENT.error; //エラーログ
         }
 
         isPush = false; //押されたというフラグをoffにする
