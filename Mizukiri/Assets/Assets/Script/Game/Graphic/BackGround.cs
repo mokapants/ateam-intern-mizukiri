@@ -2,32 +2,41 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum BackLayer
+{
+    near = 1,
+    middle,
+    far
+}
+
 public class BackGround : MonoBehaviour
 {
+    public const float width = 57.60f;
+    public const float height = 10.80f;
 
-    public RigidController rigidController;
-
-    ////[Range(0.1f, 1.0f)]
-    //public float scroll_speed;
-
-    [Range(0.0f, 1000f), SerializeField] float scrollArea;
-    [Range(-10f, 10f), SerializeField] float scrollPositionY;
-
-    void Update()
+    private BackLayer layer;
+    public BackLayer Layer
     {
-        //石の座標と同期
-        Vector3 stonePosition = rigidController.GetStonePos();
-        float stoneSpeed = rigidController.GetStoneSpeed();
+        get { return layer; }
+    }
 
-        Debug.Log(stoneSpeed);
-        if (rigidController.GetStatFlag())
+    void Awake()
+    {
+        string tag = gameObject.tag;
+        switch (tag)
         {
-            //スクロール
-            transform.Translate(-stoneSpeed / 1000, 0, 0);
-            if (transform.position.x < stonePosition.x - scrollArea / 2)
-            {
-                transform.position = new Vector3(stonePosition.x + scrollArea, scrollPositionY);
-            }
+            case "near":
+                layer = (BackLayer) 1;
+                break;
+
+            case "middle":
+                layer = (BackLayer) 2;
+                break;
+
+            case "far":
+                layer = (BackLayer) 3;
+                break;
         }
+        gameObject.transform.position += Vector3.forward * (int) layer;
     }
 }

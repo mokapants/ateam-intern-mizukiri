@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Perfect
   - Good
+  - near
+  - middle
+  - far
   layers:
   - Default
   - TransparentFX

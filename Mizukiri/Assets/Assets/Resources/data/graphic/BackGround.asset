@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28ead4bc6752942ecbaf9e1c074035f8, type: 3}
+  m_Name: BackGround
+  m_EditorClassIdentifier: 
+  backGroundStages:
+  - name: 1
+    near: {fileID: 1153049469468898, guid: 4a74b8d743e2a4684ae6aa698238b883, type: 2}
+    middle: {fileID: 1101386401996122, guid: 812dde34999504fb3b4c24050471d414, type: 2}
+    far: {fileID: 1255738101948686, guid: fcad9e9ae4f304835bc2897461eb9858, type: 2}
