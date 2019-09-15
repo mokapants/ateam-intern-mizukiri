@@ -4,8 +4,9 @@ using UnityEngine;
 
 public enum Stage
 {
-	river,
-	sea
+	River,
+	RiverToSea,
+	Sea
 }
 
 [CreateAssetMenu]

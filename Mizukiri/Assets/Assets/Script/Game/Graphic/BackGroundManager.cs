@@ -10,9 +10,15 @@ public class BackGroundManager : MonoBehaviour
 
     bool isChangeTime; // バックグラウンドのシフト処理用変数
 
+    static Stage currentStage;
+    public static Stage nextStage;
+
     void Awake()
     {
         isChangeTime = false;
+
+        currentStage = 0;
+        nextStage = 0;
     }
 
     void Update()
@@ -22,7 +28,7 @@ public class BackGroundManager : MonoBehaviour
             if (isChangeTime)
             {
                 isChangeTime = false;
-                GenerationReplacement((Stage) 0);
+                GenerationReplacement(nextStage);
             }
         }
         else
@@ -33,6 +39,12 @@ public class BackGroundManager : MonoBehaviour
 
     void GenerationReplacement(Stage stage)
     {
+        // ステージ遷移
+        if (currentStage != stage)
+        {
+            stage = currentStage + 1;
+        }
+
         // delete all backgrounds of current in directory
         foreach (Transform background in currentBackGround)
         {
@@ -47,7 +59,7 @@ public class BackGroundManager : MonoBehaviour
                 continue;
             }
             background.SetParent(currentBackGround, false);
-            background.localPosition = new Vector3(0, 0, background.localPosition.z);
+            background.localPosition = new Vector3(0, background.localPosition.y, background.localPosition.z);
         }
 
         // shift position
@@ -61,5 +73,11 @@ public class BackGroundManager : MonoBehaviour
         Instantiate(near, nextBackGround);
         Instantiate(middle, nextBackGround);
         Instantiate(far, nextBackGround);
+
+        //generate wave
+        var wave = Resources.Load<GameObject>("prefabs/wave/wave_01");
+        Instantiate(wave, nextBackGround);
+
+        currentStage = nextStage;
     }
 }

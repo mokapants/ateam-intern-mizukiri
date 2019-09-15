@@ -4,9 +4,9 @@ using UnityEngine;
 
 public enum BackLayer
 {
-    near = 1,
-    middle,
-    far
+    Near = 1,
+    Middle,
+    Far
 }
 
 public class BackGround : MonoBehaviour

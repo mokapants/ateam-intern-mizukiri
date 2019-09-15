@@ -12,7 +12,15 @@ MonoBehaviour:
   m_Name: BackGround
   m_EditorClassIdentifier: 
   backGroundStages:
+  - name: 0
+    near: {fileID: 1153049469468898, guid: 4a74b8d743e2a4684ae6aa698238b883, type: 2}
+    middle: {fileID: 1101386401996122, guid: 812dde34999504fb3b4c24050471d414, type: 2}
+    far: {fileID: 1255738101948686, guid: fcad9e9ae4f304835bc2897461eb9858, type: 2}
   - name: 1
+    near: {fileID: 1920012169884266, guid: e01ec8870947e4a768b54fa015d7f2c8, type: 2}
+    middle: {fileID: 1972297892919916, guid: 397df61b94f414229b47eb8e5da67bd6, type: 2}
+    far: {fileID: 1160118761475520, guid: cd591c80c5f6e4b639ce29811fedbf28, type: 2}
+  - name: 2
     near: {fileID: 1153049469468898, guid: 4a74b8d743e2a4684ae6aa698238b883, type: 2}
     middle: {fileID: 1101386401996122, guid: 812dde34999504fb3b4c24050471d414, type: 2}
     far: {fileID: 1255738101948686, guid: fcad9e9ae4f304835bc2897461eb9858, type: 2}
