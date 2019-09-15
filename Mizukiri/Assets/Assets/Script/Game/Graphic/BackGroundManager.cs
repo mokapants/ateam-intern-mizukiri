@@ -75,7 +75,7 @@ public class BackGroundManager : MonoBehaviour
         Instantiate(far, nextBackGround);
 
         //generate wave
-        var wave = Resources.Load<GameObject>("prefabs/wave/wave_01");
+        var wave = Resources.Load<GameObject>("prefabs/wave/wave");
         Instantiate(wave, nextBackGround);
 
         currentStage = nextStage;
