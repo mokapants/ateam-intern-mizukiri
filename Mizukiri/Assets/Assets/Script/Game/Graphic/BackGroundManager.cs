@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BackGroundManager : MonoBehaviour
 {
-    [SerializeField] Transform stoneTransform; // 石の座標
+    Transform stoneTransform; // 石の座標
     [SerializeField] Transform currentBackGround; // 現在のバックグラウンドの親オブジェクト
     [SerializeField] Transform nextBackGround; // 次のバックグラウンドの親オブジェクト
 
@@ -15,6 +15,8 @@ public class BackGroundManager : MonoBehaviour
 
     void Awake()
     {
+        stoneTransform = GameObject.Find("Stone").transform;
+
         isChangeTime = false;
 
         currentStage = 0;

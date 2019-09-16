@@ -12,6 +12,9 @@ public class GameManager : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
+		GameObject backGround = Resources.Load<GameObject>("prefabs/background/BackGround");
+		Instantiate(backGround);
+
 		score = Mathf.FloorToInt(stonePosition.x);
 	}
 
