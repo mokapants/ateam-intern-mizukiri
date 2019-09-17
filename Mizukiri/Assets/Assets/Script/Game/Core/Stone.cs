@@ -5,6 +5,7 @@ using UnityEngine;
 public class Stone : MonoBehaviour
 {
 	GameManager gameManager;
+	EffectsManager effectsManager;
 	Rigidbody2D rigidbody2d;
 
 	float startPower;
@@ -31,7 +32,8 @@ public class Stone : MonoBehaviour
 
 	void Awake()
 	{
-		gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+		gameManager = GameObject.Find("Manager").GetComponent<GameManager>();
+		effectsManager = GameObject.Find("Manager").GetComponent<EffectsManager>();
 
 		rigidbody2d = GetComponent<Rigidbody2D>();
 		rigidbody2d.simulated = false;
@@ -49,13 +51,6 @@ public class Stone : MonoBehaviour
 		consecutive = 0;
 	}
 
-	// Use this for initialization
-	void Start()
-	{
-
-	}
-
-	// Update is called once per frame
 	void Update()
 	{
 		if (GameManager.isEnd)
@@ -76,6 +71,8 @@ public class Stone : MonoBehaviour
 			}
 			else
 			{
+				Vector2 stonePosition = transform.position;
+				Effect type = Effect.Normal;
 				if (hitFlag[0]) // パーフェクト
 				{
 					if (perfectCounter < 10 && 4 < consecutive)
@@ -94,6 +91,9 @@ public class Stone : MonoBehaviour
 						// スピード維持の処理
 						consecutive++;
 					}
+
+					stonePosition = transform.position;
+					type = Effect.Perfect;
 				}
 				else if (hitFlag[1]) // グッド
 				{
@@ -108,6 +108,8 @@ public class Stone : MonoBehaviour
 					power = 0;
 					gameManager.GameEnd();
 				}
+
+				effectsManager.PlayEffect(type, stonePosition);
 
 				rigidbody2d.velocity = Vector2.zero;
 				rigidbody2d.AddForce(new Vector2(Power, HeightRange), ForceMode2D.Impulse);

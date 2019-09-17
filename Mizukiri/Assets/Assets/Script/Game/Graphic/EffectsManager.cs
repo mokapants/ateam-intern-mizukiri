@@ -17,8 +17,8 @@ public class EffectsManager : MonoBehaviour
 	{
 		effectObject = Resources.Load<GameObject>("prefabs/effects/Effects");
 		effectObject = Instantiate(effectObject);
-		effects[0] = effectObject.transform.Find("NormalEffect(Clone)").gameObject; // 普通の水パシャ
-		effects[1] = effectObject.transform.Find("PerfectEffect(Clone)").gameObject;
+		effects[0] = effectObject.transform.Find("NormalEffect").gameObject; // 普通の水パシャ
+		effects[1] = effectObject.transform.Find("PerfectEffect").gameObject;
 	}
 
 	public void PlayEffect(Effect type, Vector2 position)

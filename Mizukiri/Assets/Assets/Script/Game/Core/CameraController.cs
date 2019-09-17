@@ -13,7 +13,7 @@ public class CameraController : MonoBehaviour
 	{
 		stone = GameObject.FindWithTag("Stone");
 
-		differenceFromCenter = 3;
+		differenceFromCenter = 2;
 	}
 
 	// Update is called once per frame
