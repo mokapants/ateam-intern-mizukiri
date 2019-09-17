@@ -9,6 +9,7 @@ TagManager:
   - near
   - middle
   - far
+  - Stone
   layers:
   - Default
   - TransparentFX

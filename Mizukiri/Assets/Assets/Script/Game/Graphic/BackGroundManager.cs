@@ -80,12 +80,27 @@ public class BackGroundManager : MonoBehaviour
         // generation replacement
         foreach (Transform background in nextBackGround.GetComponentsInChildren<Transform>())
         {
+            string tag = background.tag;
             if (background == nextBackGround)
             {
                 continue;
             }
+            if (tag == "Good" || tag == "Perfect")
+            {
+                continue;
+            }
+
             background.SetParent(currentBackGround, false);
             background.localPosition = new Vector3(0, background.localPosition.y, background.localPosition.z);
+        }
+
+        foreach (Transform background in nextBackGround.GetComponentsInChildren<Transform>())
+        {
+            if (background == nextBackGround)
+            {
+                continue;
+            }
+            background.SetParent(currentBackGround.Find("wave(Clone)"), false);
         }
 
         // shift position
