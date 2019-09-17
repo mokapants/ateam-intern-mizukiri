@@ -23,6 +23,11 @@ public class BackGroundManager : MonoBehaviour
         nextStage = 0;
     }
 
+    void Start()
+    {
+        InitBackGround(currentStage);
+    }
+
     void Update()
     {
         if (stoneTransform.position.x % BackGround.width <= 10)
@@ -37,6 +42,25 @@ public class BackGroundManager : MonoBehaviour
         {
             isChangeTime = true;
         }
+    }
+
+    void InitBackGround(Stage stage)
+    {
+        // generate new backgrounds
+        var near = Resources.Load<BackGroundStageData>("data/graphic/BackGround").backGroundStages[(int) stage].near;
+        var middle = Resources.Load<BackGroundStageData>("data/graphic/BackGround").backGroundStages[(int) stage].middle;
+        var far = Resources.Load<BackGroundStageData>("data/graphic/BackGround").backGroundStages[(int) stage].far;
+        Instantiate(near, currentBackGround);
+        Instantiate(middle, currentBackGround);
+        Instantiate(far, currentBackGround);
+        Instantiate(near, nextBackGround);
+        Instantiate(middle, nextBackGround);
+        Instantiate(far, nextBackGround);
+
+        //generate wave
+        var wave = Resources.Load<GameObject>("prefabs/wave/wave");
+        Instantiate(wave, currentBackGround);
+        Instantiate(wave, nextBackGround);
     }
 
     void GenerationReplacement(Stage stage)

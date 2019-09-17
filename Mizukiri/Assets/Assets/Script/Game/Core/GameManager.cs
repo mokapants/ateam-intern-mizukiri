@@ -9,12 +9,15 @@ public class GameManager : MonoBehaviour
 	Vector3 stonePosition;
 	public static int score;
 
-	// Use this for initialization
-	void Start()
+	void Awake()
 	{
 		GameObject backGround = Resources.Load<GameObject>("prefabs/background/BackGround");
 		Instantiate(backGround);
+	}
 
+	// Use this for initialization
+	void Start()
+	{
 		score = Mathf.FloorToInt(stonePosition.x);
 	}
 
