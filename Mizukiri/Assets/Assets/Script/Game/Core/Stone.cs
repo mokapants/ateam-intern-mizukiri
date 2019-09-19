@@ -7,6 +7,8 @@ public class Stone : MonoBehaviour
 	GameManager gameManager;
 	EffectsManager effectsManager;
 	Rigidbody2D rigidbody2d;
+	//AudioClip soundEffect_bound;
+	AudioSource audioSource;
 
 	[SerializeField] ParticleSystem accelEffect;
 
@@ -35,6 +37,7 @@ public class Stone : MonoBehaviour
 
 		rigidbody2d = GetComponent<Rigidbody2D>();
 		rigidbody2d.simulated = false;
+		audioSource = GetComponent<AudioSource>();
 
 		GameStatusData gameStatus = Resources.Load<GameStatusData>("data/core/GameStatus");
 
@@ -78,6 +81,7 @@ public class Stone : MonoBehaviour
 				Effect type = Effect.Normal;
 				if (hitFlag[0]) // パーフェクト
 				{
+					audioSource.Play();
 					if (4 <= consecutive)
 					{
 						// アクセルの処理
@@ -108,6 +112,7 @@ public class Stone : MonoBehaviour
 				}
 				else if (hitFlag[1]) // グッド
 				{
+					audioSource.Play();
 					// 減速の処理
 					power -= FallQuantity;
 
