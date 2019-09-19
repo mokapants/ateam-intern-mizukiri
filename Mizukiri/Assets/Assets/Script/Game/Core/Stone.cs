@@ -8,27 +8,25 @@ public class Stone : MonoBehaviour
 	EffectsManager effectsManager;
 	Rigidbody2D rigidbody2d;
 
-	float startPower;
-	public float StartPower
-	{
-		get { return startPower + 10f; }
-	}
-	float power;
-	public float Power
-	{
-		get { return power + 10f; }
-	}
-	float upwardQuantity;
-	float fallQuantity;
+	[SerializeField] ParticleSystem accelEffect;
 
-	float heightRange;
-	public float HeightRange
+	float StartPower; // 初速
+	float MaxPower; // 最大スピード
+	float power; // 現在のスピード
+	float LowestPower; // スピードの下限
+	float UpwardQuantity; // アクセル時の加速量
+	float FallQuantity; // グッドの時の減速量
+
+	float AngleRange; // 飛ぶ角度
+	float angle;
+	public float Angle
 	{
-		get { return heightRange + 2f; }
+		get { return angle + 2f; }
 	}
-	bool[] hitFlag;
-	int perfectCounter;
-	int consecutive;
+
+	bool[] hitFlag; // グッドとパーフェクトの当たり判定
+	public static int consecutive; // 連続パーフェクトのカウンター
+	float AngleForPower; // 1の速度に対する角度の変化量
 
 	void Awake()
 	{
@@ -40,14 +38,18 @@ public class Stone : MonoBehaviour
 
 		GameStatusData gameStatus = Resources.Load<GameStatusData>("data/core/GameStatus");
 
-		startPower = gameStatus.startPower;
-		power = startPower;
-		upwardQuantity = gameStatus.upwardQuantity;
-		fallQuantity = gameStatus.fallQuantity;
-		heightRange = gameStatus.heightRange;
+		StartPower = gameStatus.startPower;
+		power = StartPower;
+		LowestPower = gameStatus.lowestPower;
+		UpwardQuantity = gameStatus.upwardQuantity;
+		FallQuantity = gameStatus.fallQuantity;
+		AngleRange = gameStatus.angleRange;
+		angle = AngleRange;
+
+		MaxPower = (UpwardQuantity * 10) + StartPower;
+		AngleForPower = Angle / (MaxPower - LowestPower);
 
 		hitFlag = new bool[2] { false, false };
-		perfectCounter = 0;
 		consecutive = 0;
 	}
 
@@ -63,8 +65,9 @@ public class Stone : MonoBehaviour
 			// 最初の投石
 			if (!GameManager.isStart)
 			{
+				accelEffect.Play();
 				rigidbody2d.simulated = true;
-				rigidbody2d.AddForce(new Vector2(StartPower, HeightRange), ForceMode2D.Impulse);
+				rigidbody2d.AddForce(new Vector2(StartPower, Angle), ForceMode2D.Impulse);
 				Debug.Log(rigidbody2d.velocity);
 
 				GameManager.isStart = true;
@@ -75,16 +78,24 @@ public class Stone : MonoBehaviour
 				Effect type = Effect.Normal;
 				if (hitFlag[0]) // パーフェクト
 				{
-					if (perfectCounter < 10 && 4 < consecutive)
+					if (4 <= consecutive)
 					{
 						// アクセルの処理
-						power += upwardQuantity;
+						if (power <= MaxPower - UpwardQuantity)
+						{
+							power += UpwardQuantity;
+						}
+						else
+						{
+							power = MaxPower;
+						}
 
-						// 跳ねる高さを下げる処理
-						heightRange -= heightRange / 10;
+						// 跳ねる高さの調整の処理
+						angle = (MaxPower - power) * AngleForPower;
+
+						accelEffect.Play();
 
 						consecutive = 0;
-						perfectCounter++;
 					}
 					else
 					{
@@ -98,23 +109,33 @@ public class Stone : MonoBehaviour
 				else if (hitFlag[1]) // グッド
 				{
 					// 減速の処理
-					power -= fallQuantity;
+					power -= FallQuantity;
+
+					// 跳ねる高さの調整の処理
+					angle = (MaxPower - power) * AngleForPower;
+
+					if (power < LowestPower)
+					{
+						gameManager.GameEnd();
+						return;
+					}
 
 					consecutive = 0;
 				}
 				else // ミス
 				{
 					// 終了の処理
-					power = 0;
 					gameManager.GameEnd();
+					return;
 				}
 
 				effectsManager.PlayEffect(type, stonePosition);
 
 				rigidbody2d.velocity = Vector2.zero;
-				rigidbody2d.AddForce(new Vector2(Power, HeightRange), ForceMode2D.Impulse);
+				rigidbody2d.AddForce(new Vector2(power, Angle), ForceMode2D.Impulse);
 			}
-			Debug.Log(Power);
+			//Debug.Log(power);
+			Debug.Log(Angle);
 		}
 	}
 

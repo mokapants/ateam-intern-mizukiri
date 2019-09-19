@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
+	[SerializeField] GameObject onGame;
+	[SerializeField] GameObject selectStone;
 	[SerializeField] GameObject gameEnd;
 
 	// Use this for initialization
 	void Start()
 	{
-		gameEnd.GetComponent<Canvas>().enabled = false;
+		onGame.SetActive(true);
+		selectStone.SetActive(false);
+		gameEnd.SetActive(false);
 	}
 
 	// Update is called once per frame
@@ -20,7 +24,7 @@ public class UIManager : MonoBehaviour
 
 	public void GameEnd()
 	{
-		gameEnd.GetComponent<Canvas>().enabled = true;
-		gameEnd.GetComponent<Animator>().enabled = true;
+		onGame.SetActive(false);
+		gameEnd.SetActive(true);
 	}
 }

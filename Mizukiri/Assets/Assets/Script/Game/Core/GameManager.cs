@@ -5,17 +5,19 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+	GameObject stone;
 	GameObject ui;
 
 	public static bool isStart;
 	public static bool isEnd;
 	bool canRestart;
 
-	Vector3 stonePosition;
 	public static int score;
 
 	void Awake()
 	{
+		stone = Resources.Load<GameObject>("prefabs/Stone");
+		stone = Instantiate(stone);
 		ui = Resources.Load<GameObject>("prefabs/ui");
 		ui = Instantiate(ui);
 		GameObject backGround = Resources.Load<GameObject>("prefabs/background/BackGround");
@@ -24,24 +26,27 @@ public class GameManager : MonoBehaviour
 		isStart = false;
 		isEnd = false;
 		canRestart = false;
+
+		score = 0;
 	}
 
-	// Use this for initialization
-	void Start()
-	{
-		score = Mathf.FloorToInt(stonePosition.x);
-	}
-
-	// Update is called once per frame
 	void Update()
 	{
-		// stonePosition = rigidController.GetStonePos();
-		// score = Mathf.FloorToInt(stonePosition.x);
+		int stonePositionX = (int) stone.transform.position.x;
+		score = stonePositionX;
 
-		// if (score > 50)
-		// {
-		// 	BackGroundManager.nextStage = Stage.Sea;
-		// }
+		if (1500 < score)
+		{
+			BackGroundManager.nextStage = Stage.Milkyway;
+		}
+		else if (800 < score)
+		{
+			BackGroundManager.nextStage = Stage.Sunkentown;
+		}
+		else if (150 < score)
+		{
+			BackGroundManager.nextStage = Stage.Sea;
+		}
 
 		if (canRestart)
 		{
@@ -61,6 +66,14 @@ public class GameManager : MonoBehaviour
 	IEnumerator GameEndCoroutine()
 	{
 		yield return new WaitForSeconds(1f);
+
+		// ハイスコア更新用
+		int highscore = PlayerPrefs.GetInt("highscore", 0);
+		if (highscore < score)
+		{
+			PlayerPrefs.SetInt("highscore", score);
+		}
+
 		ui.GetComponent<UIManager>().GameEnd();
 		canRestart = true;
 	}

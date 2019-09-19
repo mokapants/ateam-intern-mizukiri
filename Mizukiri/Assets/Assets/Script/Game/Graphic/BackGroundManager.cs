@@ -15,7 +15,7 @@ public class BackGroundManager : MonoBehaviour
 
     void Awake()
     {
-        stoneTransform = GameObject.Find("Stone").transform;
+        stoneTransform = GameObject.Find("stone(Clone)").transform;
 
         isChangeTime = false;
 
@@ -30,7 +30,7 @@ public class BackGroundManager : MonoBehaviour
 
     void Update()
     {
-        if (stoneTransform.position.x % BackGround.width <= 10)
+        if (stoneTransform.position.x % BackGround.width <= 30)
         {
             if (isChangeTime)
             {

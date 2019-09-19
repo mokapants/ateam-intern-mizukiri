@@ -11,7 +11,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1c2423f096e04175bf56431f668c8b3, type: 3}
   m_Name: GameStatus
   m_EditorClassIdentifier: 
-  startPower: 20
+  startPower: 30
+  lowestPower: 15
   upwardQuantity: 2
   fallQuantity: 5
   heightRange: 3

@@ -37,6 +37,7 @@ public class BackGround : MonoBehaviour
                 layer = (BackLayer) 3;
                 break;
         }
+
         gameObject.transform.position += Vector3.forward * (int) layer;
     }
 }

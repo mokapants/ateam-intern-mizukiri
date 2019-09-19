@@ -6,7 +6,11 @@ public enum Stage
 {
 	River,
 	RiverToSea,
-	Sea
+	Sea,
+	SeaToSunkentown,
+	Sunkentown,
+	SunkentownToMilkyway,
+	Milkyway
 }
 
 [CreateAssetMenu]

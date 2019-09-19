@@ -19,6 +19,11 @@ public class CameraController : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		if (stone.transform.position.x < differenceFromCenter)
+		{
+			return;
+		}
+
 		Vector3 newPosition = Vector3.zero;
 		newPosition.x += stone.transform.position.x + differenceFromCenter;
 		newPosition.z = gameObject.transform.position.z;
