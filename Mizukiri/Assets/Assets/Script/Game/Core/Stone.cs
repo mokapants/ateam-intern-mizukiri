@@ -6,15 +6,17 @@ public class Stone : MonoBehaviour
 {
 	GameManager gameManager;
 	EffectsManager effectsManager;
+	CameraController cameraController;
+	OnGameManager onGameManager;
+
 	Rigidbody2D rigidbody2d;
-	//AudioClip soundEffect_bound;
 	AudioSource audioSource;
 
 	[SerializeField] ParticleSystem accelEffect;
 
 	float StartPower; // 初速
 	float MaxPower; // 最大スピード
-	float power; // 現在のスピード
+	public static float power; // 現在のスピード
 	float LowestPower; // スピードの下限
 	float UpwardQuantity; // アクセル時の加速量
 	float FallQuantity; // グッドの時の減速量
@@ -34,6 +36,7 @@ public class Stone : MonoBehaviour
 	{
 		gameManager = GameObject.Find("Manager").GetComponent<GameManager>();
 		effectsManager = GameObject.Find("Manager").GetComponent<EffectsManager>();
+		cameraController = GameObject.Find("Main Camera").GetComponent<CameraController>();
 
 		rigidbody2d = GetComponent<Rigidbody2D>();
 		rigidbody2d.simulated = false;
@@ -54,6 +57,11 @@ public class Stone : MonoBehaviour
 
 		hitFlag = new bool[2] { false, false };
 		consecutive = 0;
+	}
+
+	void Start()
+	{
+		onGameManager = GameObject.Find("OnGame").GetComponent<OnGameManager>();
 	}
 
 	void Update()
@@ -81,7 +89,11 @@ public class Stone : MonoBehaviour
 				Effect type = Effect.Normal;
 				if (hitFlag[0]) // パーフェクト
 				{
-					audioSource.Play();
+					if (5 == consecutive)
+					{
+						consecutive = 0;
+					}
+
 					if (4 <= consecutive)
 					{
 						// アクセルの処理
@@ -97,22 +109,24 @@ public class Stone : MonoBehaviour
 						// 跳ねる高さの調整の処理
 						angle = (MaxPower - power) * AngleForPower;
 
-						accelEffect.Play();
+						consecutive++;
 
-						consecutive = 0;
+						accelEffect.Play();
+						AcceleEvent();
 					}
 					else
 					{
-						// スピード維持の処理
 						consecutive++;
+						onGameManager.SetComboText();
 					}
 
 					stonePosition = transform.position;
 					type = Effect.Perfect;
+
+					audioSource.Play();
 				}
 				else if (hitFlag[1]) // グッド
 				{
-					audioSource.Play();
 					// 減速の処理
 					power -= FallQuantity;
 
@@ -126,6 +140,8 @@ public class Stone : MonoBehaviour
 					}
 
 					consecutive = 0;
+
+					audioSource.Play();
 				}
 				else // ミス
 				{
@@ -137,11 +153,17 @@ public class Stone : MonoBehaviour
 				effectsManager.PlayEffect(type, stonePosition);
 
 				rigidbody2d.velocity = Vector2.zero;
-				rigidbody2d.AddForce(new Vector2(power, Angle), ForceMode2D.Impulse);
+				float angleRandom = Random.Range(-1f, 2f);
+				rigidbody2d.AddForce(new Vector2(power, Angle + angleRandom), ForceMode2D.Impulse);
+				Debug.Log(Angle + angleRandom);
 			}
-			//Debug.Log(power);
-			Debug.Log(Angle);
 		}
+	}
+
+	void AcceleEvent()
+	{
+		StartCoroutine(cameraController.AccelMotion());
+		onGameManager.SetAccelText();
 	}
 
 	void OnTriggerEnter2D(Collider2D other)

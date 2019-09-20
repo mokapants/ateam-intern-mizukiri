@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
+	[SerializeField] GameObject firstAndOnGame;
 	[SerializeField] GameObject onGame;
 	[SerializeField] GameObject selectStone;
 	[SerializeField] GameObject gameEnd;
@@ -11,7 +12,8 @@ public class UIManager : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
-		onGame.SetActive(true);
+		firstAndOnGame.SetActive(true);
+		onGame.SetActive(false);
 		selectStone.SetActive(false);
 		gameEnd.SetActive(false);
 	}
@@ -19,12 +21,15 @@ public class UIManager : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		if (GameManager.isStart)
+		{
+			onGame.SetActive(true);
+		}
 
-	}
-
-	public void GameEnd()
-	{
-		onGame.SetActive(false);
-		gameEnd.SetActive(true);
+		if (GameManager.canRestart)
+		{
+			onGame.SetActive(false);
+			gameEnd.SetActive(true);
+		}
 	}
 }

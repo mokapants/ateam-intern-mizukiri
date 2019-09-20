@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: GameStatus
   m_EditorClassIdentifier: 
   startPower: 30
-  lowestPower: 15
+  lowestPower: 20
   upwardQuantity: 2
   fallQuantity: 5
-  heightRange: 3
+  angleRange: 3

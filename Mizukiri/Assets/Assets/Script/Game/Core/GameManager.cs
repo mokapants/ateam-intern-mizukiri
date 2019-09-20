@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
 
 	public static bool isStart;
 	public static bool isEnd;
-	bool canRestart;
+	public static bool canRestart;
 
 	public static int score;
 
@@ -32,6 +32,19 @@ public class GameManager : MonoBehaviour
 
 	void Update()
 	{
+		if (canRestart)
+		{
+			if (Input.GetKeyDown(KeyCode.Space))
+			{
+				SceneManager.LoadScene("Game");
+			}
+		}
+
+		if (isEnd)
+		{
+			return;
+		}
+
 		int stonePositionX = (int) stone.transform.position.x;
 		score = stonePositionX;
 
@@ -46,14 +59,6 @@ public class GameManager : MonoBehaviour
 		else if (150 < score)
 		{
 			BackGroundManager.nextStage = Stage.Sea;
-		}
-
-		if (canRestart)
-		{
-			if (Input.GetKeyDown(KeyCode.Space))
-			{
-				SceneManager.LoadScene("Game");
-			}
 		}
 	}
 
@@ -74,7 +79,6 @@ public class GameManager : MonoBehaviour
 			PlayerPrefs.SetInt("highscore", score);
 		}
 
-		ui.GetComponent<UIManager>().GameEnd();
 		canRestart = true;
 	}
 }
