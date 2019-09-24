@@ -33,10 +33,11 @@ public class OnGameManager : MonoBehaviour
             scoreText.text = GameManager.score.ToString() + " m";
         }
 
-        if (BackGroundManager.nextStage == Stage.Sunkentown && !isAlreadyChangeColor)
-        {
-            StartCoroutine("ChangeTextColor");
-        }
+        // 文字を常に白にするため，不要
+        // if (BackGroundManager.nextStage == Stage.Sunkentown && !isAlreadyChangeColor)
+        // {
+        //     StartCoroutine("ChangeTextColor");
+        // }
 
         if (Stone.consecutive == 0)
         {
@@ -74,14 +75,15 @@ public class OnGameManager : MonoBehaviour
     }
 
     // 背景が黒いステージでテキストを白くするためのフェード
-    IEnumerator ChangeTextColor()
-    {
-        for (float color = 0; color <= 1; color += 0.01f)
-        {
-            yield return new WaitForSeconds(0.01f);
-            Color newColor = Color.white * color;
-            newColor.a = 1;
-            scoreText.color = newColor;
-        }
-    }
+    // 文字を常に白にするため，不要
+    // IEnumerator ChangeTextColor()
+    // {
+    //     for (float color = 0; color <= 1; color += 0.01f)
+    //     {
+    //         yield return new WaitForSeconds(0.01f);
+    //         Color newColor = Color.white * color;
+    //         newColor.a = 1;
+    //         scoreText.color = newColor;
+    //     }
+    // }
 }

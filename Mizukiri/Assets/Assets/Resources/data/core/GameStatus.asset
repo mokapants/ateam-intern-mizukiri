@@ -14,5 +14,5 @@ MonoBehaviour:
   startPower: 30
   lowestPower: 20
   upwardQuantity: 2
-  fallQuantity: 5
-  angleRange: 3
+  fallQuantity: 4
+  angleRange: 2
