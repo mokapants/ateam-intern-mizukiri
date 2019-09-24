@@ -6,7 +6,7 @@ public class Stone : MonoBehaviour
 {
 	GameManager gameManager;
 	EffectsManager effectsManager;
-    SoundManager soundManager;
+	SoundManager soundManager;
 	CameraController cameraController;
 	OnGameManager onGameManager;
 
@@ -37,7 +37,7 @@ public class Stone : MonoBehaviour
 	{
 		gameManager = GameObject.Find("Manager").GetComponent<GameManager>();
 		effectsManager = GameObject.Find("Manager").GetComponent<EffectsManager>();
-        soundManager = GameObject.Find("Manager").GetComponent<SoundManager>();
+		soundManager = GameObject.Find("Manager").GetComponent<SoundManager>();
 		cameraController = GameObject.Find("Main Camera").GetComponent<CameraController>();
 
 		rigidbody2d = GetComponent<Rigidbody2D>();
@@ -73,7 +73,12 @@ public class Stone : MonoBehaviour
 			return;
 		}
 
-		if (Input.GetKeyDown(KeyCode.Space))
+		if (transform.position.y < -4)
+		{
+			gameManager.GameEnd();
+		}
+
+		if ((Input.GetKeyDown(KeyCode.Space)) || (Input.GetMouseButtonDown(0)))
 		{
 			// 最初の投石
 			if (!GameManager.isStart)
@@ -83,7 +88,7 @@ public class Stone : MonoBehaviour
 				rigidbody2d.AddForce(new Vector2(StartPower, Angle), ForceMode2D.Impulse);
 				Debug.Log(rigidbody2d.velocity);
 
-                audioSource.PlayOneShot(soundManager.SetSoundEffect(SoundEffect.Start));
+				audioSource.PlayOneShot(soundManager.SetSoundEffect(SoundEffect.Start));
 				GameManager.isStart = true;
 			}
 			else
@@ -126,8 +131,8 @@ public class Stone : MonoBehaviour
 					stonePosition = transform.position;
 					type = Effect.Perfect;
 
-                    audioSource.PlayOneShot(soundManager.SetSoundEffect(SoundEffect.Bound));
-                }
+					audioSource.PlayOneShot(soundManager.SetSoundEffect(SoundEffect.Bound));
+				}
 				else if (hitFlag[1]) // グッド
 				{
 					// 減速の処理
@@ -144,8 +149,8 @@ public class Stone : MonoBehaviour
 
 					consecutive = 0;
 
-                    audioSource.PlayOneShot(soundManager.SetSoundEffect(SoundEffect.Bound));
-                }
+					audioSource.PlayOneShot(soundManager.SetSoundEffect(SoundEffect.Bound));
+				}
 				else // ミス
 				{
 					// 終了の処理
@@ -167,8 +172,8 @@ public class Stone : MonoBehaviour
 	{
 		StartCoroutine(cameraController.AccelMotion());
 		onGameManager.SetAccelText();
-        audioSource.PlayOneShot(soundManager.SetSoundEffect(SoundEffect.Boost));
-    }
+		audioSource.PlayOneShot(soundManager.SetSoundEffect(SoundEffect.Boost));
+	}
 
 	void OnTriggerEnter2D(Collider2D other)
 	{

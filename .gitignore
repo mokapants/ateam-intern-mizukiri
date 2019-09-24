@@ -4,6 +4,7 @@
 [Bb]uild/
 [Bb]uilds/
 Assets/AssetStoreTools*
+Mizukiri/Assets/Assets/Resources/fonts/
 !docs/*
 
 # Visual Studio cache directory

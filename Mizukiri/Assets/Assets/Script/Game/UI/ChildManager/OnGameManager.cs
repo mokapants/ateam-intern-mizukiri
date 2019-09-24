@@ -50,7 +50,7 @@ public class OnGameManager : MonoBehaviour
         comboAnime.transform.gameObject.SetActive(false);
         comboAnime.transform.gameObject.SetActive(true);
         comboText.enabled = true;
-        comboText.text = "PERFECT × " + Stone.consecutive;
+        comboText.text = "PERFECT ×" + Stone.consecutive;
     }
 
     public void SetAccelText()
