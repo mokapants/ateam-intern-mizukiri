@@ -124,6 +124,7 @@ GameObject:
   - component: {fileID: 650099988}
   - component: {fileID: 650099990}
   - component: {fileID: 650099991}
+  - component: {fileID: 650099992}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -181,6 +182,20 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 16c911092af35464e9e836263af28a04, type: 3}
   - {fileID: 8300000, guid: daf05a5a78bdf1f4aa863c5dbabb67f4, type: 3}
   - {fileID: 8300000, guid: f8d83bfdfcbffee478b2a512efb78147, type: 3}
+--- !u!114 &650099992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 650099987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 288f86f12333742afb4e61b5d8e1bc20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fishes:
+  - {fileID: 1183888443607820, guid: 6bb6a6f6310f54f22836d5896d17b8d0, type: 2}
+  - {fileID: 1313041549238274, guid: a75691231a8304a6d87d1ec9037adafb, type: 2}
 --- !u!1 &1112840715
 GameObject:
   m_ObjectHideFlags: 0
