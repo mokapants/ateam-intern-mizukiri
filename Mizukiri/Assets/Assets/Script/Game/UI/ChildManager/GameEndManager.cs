@@ -11,6 +11,6 @@ public class GameEndManager : MonoBehaviour
 	void Start()
 	{
 		scoreText.text = GameManager.score.ToString() + " m";
-		highscoreText.text = PlayerPrefs.GetInt("highscore", 0).ToString() + " m";
+		highscoreText.text = PlayerPrefs.GetInt("HighScore", 0).ToString() + " m";
 	}
 }

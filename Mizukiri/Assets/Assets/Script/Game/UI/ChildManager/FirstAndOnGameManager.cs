@@ -9,7 +9,7 @@ public class FirstAndOnGameManager : MonoBehaviour
 
     void Start()
     {
-        highscoreText.text = PlayerPrefs.GetInt("highscore", 0).ToString() + " m";
+        highscoreText.text = PlayerPrefs.GetInt("HighScore", 0).ToString() + " m";
     }
 
     void Update()

@@ -14,6 +14,13 @@ public class HttpCommunication : MonoBehaviour
 
 	void Start()
 	{
+		if (!GameManager.isFirst)
+		{
+			this.enabled = false;
+			return;
+		}
+		GameManager.isFirst = false;
+
 		scrollContent = GameObject.Find("Content").transform;
 
 		stones = Resources.LoadAll<GameObject>("prefabs/skins");
@@ -27,10 +34,18 @@ public class HttpCommunication : MonoBehaviour
 	{
 		// 6個の画像をダウンロード
 		// ここの実装無理やりすぎて泣きたい
-		for (int i = 0; i < 6; i++)
+		for (int i = -1; i < 6; i++)
 		{
 			//URLをGETで用意
-			UnityWebRequest webRequest = UnityWebRequestTexture.GetTexture(url + i.ToString() + ".png");
+			UnityWebRequest webRequest;
+			if (i == -1)
+			{
+				webRequest = UnityWebRequest.Get(url + "unlock.json");
+			}
+			else
+			{
+				webRequest = UnityWebRequestTexture.GetTexture(url + i.ToString() + ".png");
+			}
 			//URLに接続して結果が戻ってくるまで待機
 			yield return webRequest.SendWebRequest();
 
@@ -45,11 +60,22 @@ public class HttpCommunication : MonoBehaviour
 			{
 				// 通信成功
 				Debug.Log(i.ToString() + "atta");
-				Texture texture = ((DownloadHandlerTexture) webRequest.downloadHandler).texture;
-				stones[i].GetComponent<RawImage>().texture = texture;
+				if (i == -1)
+				{
+					Debug.Log(webRequest.downloadHandler.text);
+					SelectStoneManager.unlockData = JsonUtility.FromJson<UnlockData>(webRequest.downloadHandler.text);
+					Debug.Log(SelectStoneManager.unlockData.ChallengeCount[0]);
+				}
+				else
+				{
+					Texture texture = ((DownloadHandlerTexture) webRequest.downloadHandler).texture;
+					stones[i].GetComponent<RawImage>().texture = texture;
+				}
 			}
-
-			Instantiate(stones[i], scrollContent);
+			if (i != -1)
+			{
+				Instantiate(stones[i], scrollContent);
+			}
 		}
 	}
 }

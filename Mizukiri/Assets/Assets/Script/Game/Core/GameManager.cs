@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
 	GameObject stone;
 	GameObject ui;
 
+	public static bool isFirst = true;
 	public static bool isStart;
 	public static bool isEnd;
 	public static bool canRestart;
@@ -73,10 +74,10 @@ public class GameManager : MonoBehaviour
 		yield return new WaitForSeconds(1f);
 
 		// ハイスコア更新用
-		int highscore = PlayerPrefs.GetInt("highscore", 0);
+		int highscore = PlayerPrefs.GetInt("HighScore", 0);
 		if (highscore < score)
 		{
-			PlayerPrefs.SetInt("highscore", score);
+			PlayerPrefs.SetInt("HighScore", score);
 		}
 
 		canRestart = true;
