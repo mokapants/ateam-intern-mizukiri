@@ -8,8 +8,10 @@ public class Stone : MonoBehaviour
 	EffectsManager effectsManager;
 	SoundManager soundManager;
 	CameraController cameraController;
+	UIManager uiManager;
 	OnGameManager onGameManager;
 
+	public static SpriteRenderer spriteRenderer;
 	Rigidbody2D rigidbody2d;
 	AudioSource audioSource;
 
@@ -32,6 +34,7 @@ public class Stone : MonoBehaviour
 	bool[] hitFlag; // グッドとパーフェクトの当たり判定
 	public static int consecutive; // 連続パーフェクトのカウンター
 	float AngleForPower; // 1の速度に対する角度の変化量
+	bool isSelectStone; // uiのbuttonがタッチされたかチェックするために1フレーム待つためのbool
 
 	void Awake()
 	{
@@ -40,6 +43,7 @@ public class Stone : MonoBehaviour
 		soundManager = GameObject.Find("Manager").GetComponent<SoundManager>();
 		cameraController = GameObject.Find("Main Camera").GetComponent<CameraController>();
 
+		spriteRenderer = GetComponent<SpriteRenderer>();
 		rigidbody2d = GetComponent<Rigidbody2D>();
 		rigidbody2d.simulated = false;
 		audioSource = GetComponent<AudioSource>();
@@ -59,16 +63,19 @@ public class Stone : MonoBehaviour
 
 		hitFlag = new bool[2] { false, false };
 		consecutive = 0;
+		isSelectStone = false;
 	}
 
 	void Start()
 	{
+		uiManager = GameObject.Find("ui(Clone)").GetComponent<UIManager>();
 		onGameManager = GameObject.Find("OnGame").GetComponent<OnGameManager>();
 	}
 
 	void Update()
 	{
-		if (GameManager.isEnd)
+		// ゲーム終了後か，スキン変更中の画面が表示されてる時は認識しない
+		if (GameManager.isEnd || uiManager.selectStone.activeInHierarchy)
 		{
 			return;
 		}
@@ -81,14 +88,22 @@ public class Stone : MonoBehaviour
 		if ((Input.GetKeyDown(KeyCode.Space)) || (Input.GetMouseButtonDown(0)))
 		{
 			// 最初の投石
-			if (!GameManager.isStart)
+			if (!GameManager.isStart || isSelectStone)
 			{
+				if (!isSelectStone)
+				{
+					isSelectStone = true;
+					return;
+				}
+
+				Debug.Log("dofa");
 				accelEffect.Play();
 				rigidbody2d.simulated = true;
 				rigidbody2d.AddForce(new Vector2(StartPower, Angle), ForceMode2D.Impulse);
 				Debug.Log(rigidbody2d.velocity);
 
 				audioSource.PlayOneShot(soundManager.SetSoundEffect(SoundEffect.Start));
+				isSelectStone = false;
 				GameManager.isStart = true;
 			}
 			else
@@ -163,7 +178,6 @@ public class Stone : MonoBehaviour
 				rigidbody2d.velocity = Vector2.zero;
 				float angleRandom = Random.Range(-1f, 2f);
 				rigidbody2d.AddForce(new Vector2(power, Angle + angleRandom), ForceMode2D.Impulse);
-				Debug.Log(Angle + angleRandom);
 			}
 		}
 	}

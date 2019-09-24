@@ -1,22 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class First : MonoBehaviour
 {
-	Canvas firstCanvas;
+	UIManager uiManager;
+	[SerializeField] Image stoneImage;
 
 	void Start()
 	{
-		firstCanvas = GetComponent<Canvas>();
-		firstCanvas.enabled = true;
+		uiManager = transform.parent.gameObject.GetComponent<UIManager>();
+		stoneImage.sprite = Stone.spriteRenderer.sprite;
 	}
 
-	void Update()
+	public void OnSelectStone()
 	{
-		if (GameManager.isStart)
-		{
-			firstCanvas.enabled = false;
-		}
+		Debug.Log("selelelele");
+		uiManager.OnSelectStone();
 	}
 }

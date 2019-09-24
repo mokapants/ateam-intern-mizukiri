@@ -12,7 +12,6 @@ public class SelectStoneManager : MonoBehaviour
 
 	void Start()
 	{
-		PlayerPrefs.SetInt("default stone", 1);
 		foreach (Transform stone in content)
 		{
 			string name = stone.name;
@@ -43,7 +42,7 @@ public class SelectStoneManager : MonoBehaviour
 
 	void SetStatus(string stoneName)
 	{
-		Image stoneImage = content.Find(stoneName).GetComponent<Image>();
+		RawImage stoneImage = content.Find(stoneName).GetComponent<RawImage>();
 		bool isRelease = PlayerPrefs.GetInt(stoneName, 0) == 0 ? false : true;
 
 		stoneImage.color = Color.white;
