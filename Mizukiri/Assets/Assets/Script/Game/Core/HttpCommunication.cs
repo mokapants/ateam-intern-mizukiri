@@ -7,6 +7,7 @@ public class HttpCommunication : MonoBehaviour
 {
 	Transform scrollContent;
 	Stone stone;
+	Image gauge;
 	// 接続するURL
 	private const string URL = "http://tk2-213-16074.vs.sakura.ne.jp/spRush/Skin/";
 
@@ -19,6 +20,8 @@ public class HttpCommunication : MonoBehaviour
 	{
 		scrollContent = GameObject.Find("Content").transform;
 		stones = Resources.LoadAll<GameObject>("prefabs/skins");
+		gauge = GameObject.Find("Gauge").GetComponent<Image>();
+		gauge.fillAmount = 0;
 
 		if (!GameManager.isFirst)
 		{
@@ -43,8 +46,10 @@ public class HttpCommunication : MonoBehaviour
 	{
 		// 6個の画像をダウンロード
 		// ここの実装無理やりすぎて泣きたい
+		int gaugeCounter = 0;
 		for (int i = -1; i < length; i++)
 		{
+			Debug.Log("nowloading");
 			//URLをGETで用意
 			UnityWebRequest webRequest;
 			if (i == -1)
@@ -85,6 +90,8 @@ public class HttpCommunication : MonoBehaviour
 			{
 				Instantiate(stones[i], scrollContent);
 			}
+			gaugeCounter++;
+			gauge.fillAmount = (float) gaugeCounter / 7;
 		}
 		stone.ChangeSkin(HttpCommunication.stones);
 		GameManager.isLoad = false;

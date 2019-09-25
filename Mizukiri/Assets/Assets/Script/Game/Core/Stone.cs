@@ -12,7 +12,7 @@ public class Stone : MonoBehaviour
 	UIManager uiManager;
 	OnGameManager onGameManager;
 
-	int textureNumber;
+	public static int textureNumber;
 	public static SpriteRenderer spriteRenderer;
 	Rigidbody2D rigidbody2d;
 	AudioSource audioSource;
@@ -46,7 +46,7 @@ public class Stone : MonoBehaviour
 		cameraController = GameObject.Find("Main Camera").GetComponent<CameraController>();
 
 		textureNumber = PlayerPrefs.GetInt("TextureNumber", 0);
-		spriteRenderer = GetComponent<SpriteRenderer>();
+		spriteRenderer = transform.Find("stoneimage").gameObject.GetComponent<SpriteRenderer>();
 		rigidbody2d = GetComponent<Rigidbody2D>();
 		rigidbody2d.simulated = false;
 		audioSource = GetComponent<AudioSource>();
@@ -73,12 +73,18 @@ public class Stone : MonoBehaviour
 	{
 		uiManager = GameObject.Find("ui(Clone)").GetComponent<UIManager>();
 		onGameManager = GameObject.Find("OnGame").GetComponent<OnGameManager>();
+
+		textureNumber = PlayerPrefs.GetInt("StoneSkin", 0);
+		if (!GameManager.isLoad)
+		{
+			ChangeSkin(HttpCommunication.stones);
+		}
 	}
 
 	void Update()
 	{
 		// ゲーム終了後か，スキン変更中の画面が表示されてる時は認識しない
-		if (GameManager.isEnd || uiManager.selectStone.activeInHierarchy)
+		if (GameManager.isEnd || uiManager.selectStone.activeInHierarchy || GameManager.isLoad)
 		{
 			isSelectStone = false;
 			return;
@@ -195,12 +201,12 @@ public class Stone : MonoBehaviour
 	public void ChangeSkin(GameObject[] texture)
 	{
 		Texture2D texture2d = (Texture2D) texture[textureNumber].GetComponent<RawImage>().texture;
-		spriteRenderer.sprite = Sprite.Create(texture2d, new Rect(0, 0, 256, 256), Vector2.zero);
+		spriteRenderer.sprite = Sprite.Create(texture2d, new Rect(0, 0, 185, 186), Vector2.zero);
 	}
 
 	IEnumerator CheckSelectStone()
 	{
-		yield return new WaitForSeconds(0.1f);
+		yield return new WaitForSeconds(0.15f);
 		isSelectStone = true;
 	}
 

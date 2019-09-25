@@ -14,9 +14,13 @@ public class First : MonoBehaviour
 		stoneImage.sprite = Stone.spriteRenderer.sprite;
 	}
 
+	void Update()
+	{
+		stoneImage.sprite = Stone.spriteRenderer.sprite;
+	}
+
 	public void OnSelectStone()
 	{
-		Debug.Log("selelelele");
 		uiManager.OnSelectStone();
 	}
 }
