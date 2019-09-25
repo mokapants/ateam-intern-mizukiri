@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public enum UnlockType
 {
+	Default,
 	HighScore,
 	ChallengeCount
 }
@@ -18,6 +19,7 @@ public class UnlockData
 public class SelectStoneManager : MonoBehaviour
 {
 	UIManager uiManager;
+	Stone stone;
 
 	[SerializeField] Transform content;
 	[SerializeField] Scrollbar scrollbar;
@@ -29,23 +31,34 @@ public class SelectStoneManager : MonoBehaviour
 	void Start()
 	{
 		uiManager = transform.parent.gameObject.GetComponent<UIManager>();
+		stone = GameObject.Find("stone(Clone)").GetComponent<Stone>();
 
-		int counter = 0;
+		int counter = -1;
 		bool isNextType = false;
 		foreach (Transform stone in content)
 		{
 			string name = stone.name;
-			if (counter < unlockData.HighScore.Length && !isNextType)
+			if (counter == -1)
+			{
+				SetStatus(UnlockType.Default, 0, name);
+			}
+			else if (counter < unlockData.HighScore.Length && !isNextType)
 			{
 				SetStatus(UnlockType.HighScore, unlockData.HighScore[counter], name);
 			}
 			else
 			{
-				isNextType = true;
-				counter = 0;
+				if (!isNextType)
+				{
+					isNextType = true;
+					counter = 0;
+				}
 				SetStatus(UnlockType.ChallengeCount, unlockData.ChallengeCount[counter], name);
 			}
+			counter++;
 		}
+
+		stone.ChangeSkin(HttpCommunication.stones);
 
 		oneEquallyDividedValue = 1f / (content.childCount - 1);
 	}
@@ -72,7 +85,6 @@ public class SelectStoneManager : MonoBehaviour
 	void SetStatus(UnlockType type, int value, string stoneName)
 	{
 		RawImage stoneImage = content.Find(stoneName).GetComponent<RawImage>();
-		bool isRelease = PlayerPrefs.GetInt(stoneName, 0) == 0 ? false : true;
 
 		stoneImage.color = Color.white;
 		if (type == UnlockType.ChallengeCount)
@@ -84,7 +96,7 @@ public class SelectStoneManager : MonoBehaviour
 				stoneImage.color *= hard;
 			}
 		}
-		else
+		else if (type == UnlockType.HighScore)
 		{
 			// 回数超えてなかったらダメ判定
 			if (PlayerPrefs.GetInt("HighScore", 0) < value)

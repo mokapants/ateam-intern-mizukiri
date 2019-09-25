@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 	GameObject ui;
 
 	public static bool isFirst = true;
+	public static bool isLoad = true;
 	public static bool isStart;
 	public static bool isEnd;
 	public static bool canRestart;
@@ -66,6 +67,8 @@ public class GameManager : MonoBehaviour
 	public void GameEnd()
 	{
 		isEnd = true;
+		int challengeCount = PlayerPrefs.GetInt("ChallengeCount", 0);
+		PlayerPrefs.SetInt("ChallengeCount", challengeCount + 1);
 		StartCoroutine("GameEndCoroutine");
 	}
 

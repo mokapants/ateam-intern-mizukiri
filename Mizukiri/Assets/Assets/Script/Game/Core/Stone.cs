@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Stone : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class Stone : MonoBehaviour
 	UIManager uiManager;
 	OnGameManager onGameManager;
 
+	int textureNumber;
 	public static SpriteRenderer spriteRenderer;
 	Rigidbody2D rigidbody2d;
 	AudioSource audioSource;
@@ -43,6 +45,7 @@ public class Stone : MonoBehaviour
 		soundManager = GameObject.Find("Manager").GetComponent<SoundManager>();
 		cameraController = GameObject.Find("Main Camera").GetComponent<CameraController>();
 
+		textureNumber = PlayerPrefs.GetInt("TextureNumber", 0);
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		rigidbody2d = GetComponent<Rigidbody2D>();
 		rigidbody2d.simulated = false;
@@ -77,6 +80,7 @@ public class Stone : MonoBehaviour
 		// ゲーム終了後か，スキン変更中の画面が表示されてる時は認識しない
 		if (GameManager.isEnd || uiManager.selectStone.activeInHierarchy)
 		{
+			isSelectStone = false;
 			return;
 		}
 
@@ -85,18 +89,17 @@ public class Stone : MonoBehaviour
 			gameManager.GameEnd();
 		}
 
-		if ((Input.GetKeyDown(KeyCode.Space)) || (Input.GetMouseButtonDown(0)))
+		if ((Input.GetKeyDown(KeyCode.Space)) || (Input.GetMouseButtonDown(0)) || isSelectStone)
 		{
 			// 最初の投石
 			if (!GameManager.isStart || isSelectStone)
 			{
 				if (!isSelectStone)
 				{
-					isSelectStone = true;
+					StartCoroutine("CheckSelectStone");
 					return;
 				}
 
-				Debug.Log("dofa");
 				accelEffect.Play();
 				rigidbody2d.simulated = true;
 				rigidbody2d.AddForce(new Vector2(StartPower, Angle), ForceMode2D.Impulse);
@@ -187,6 +190,18 @@ public class Stone : MonoBehaviour
 		StartCoroutine(cameraController.AccelMotion());
 		onGameManager.SetAccelText();
 		audioSource.PlayOneShot(soundManager.SetSoundEffect(SoundEffect.Boost));
+	}
+
+	public void ChangeSkin(GameObject[] texture)
+	{
+		Texture2D texture2d = (Texture2D) texture[textureNumber].GetComponent<RawImage>().texture;
+		spriteRenderer.sprite = Sprite.Create(texture2d, new Rect(0, 0, 256, 256), Vector2.zero);
+	}
+
+	IEnumerator CheckSelectStone()
+	{
+		yield return new WaitForSeconds(0.1f);
+		isSelectStone = true;
 	}
 
 	void OnTriggerEnter2D(Collider2D other)

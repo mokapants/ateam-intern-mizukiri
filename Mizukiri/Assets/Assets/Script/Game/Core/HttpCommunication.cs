@@ -6,24 +6,33 @@ using UnityEngine.UI;
 public class HttpCommunication : MonoBehaviour
 {
 	Transform scrollContent;
+	Stone stone;
 	// 接続するURL
 	private const string URL = "http://tk2-213-16074.vs.sakura.ne.jp/spRush/Skin/";
 
-	// 用意してある石のprefab
-	private GameObject[] stones;
+	const int length = 6;
 
-	void Start()
+	// 用意してある石のprefab
+	public static GameObject[] stones;
+
+	void Awake()
 	{
+		scrollContent = GameObject.Find("Content").transform;
+		stones = Resources.LoadAll<GameObject>("prefabs/skins");
+
 		if (!GameManager.isFirst)
 		{
+			for (int i = 0; i < length; i++)
+			{
+				Debug.Log(stones[i]);
+				Instantiate(stones[i], scrollContent);
+			}
 			this.enabled = false;
 			return;
 		}
 		GameManager.isFirst = false;
 
-		scrollContent = GameObject.Find("Content").transform;
-
-		stones = Resources.LoadAll<GameObject>("prefabs/skins");
+		stone = GameObject.Find("stone(Clone)").GetComponent<Stone>();
 
 		// コルーチンを呼び出す
 		StartCoroutine("OnSend", URL);
@@ -34,7 +43,7 @@ public class HttpCommunication : MonoBehaviour
 	{
 		// 6個の画像をダウンロード
 		// ここの実装無理やりすぎて泣きたい
-		for (int i = -1; i < 6; i++)
+		for (int i = -1; i < length; i++)
 		{
 			//URLをGETで用意
 			UnityWebRequest webRequest;
@@ -77,5 +86,7 @@ public class HttpCommunication : MonoBehaviour
 				Instantiate(stones[i], scrollContent);
 			}
 		}
+		stone.ChangeSkin(HttpCommunication.stones);
+		GameManager.isLoad = false;
 	}
 }
